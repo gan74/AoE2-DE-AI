@@ -1,0 +1,93 @@
+; Test AI
+; Made using tutorial by interlepus
+; Object ID table: https://airef.github.io/tables/objects.html
+; Reference tables: http://www.userpatch.aiscripters.net/reference.html#
+
+
+;region Constants
+
+(defconst livestock-class 958)
+
+;endregion
+
+
+
+;region Basic eco
+
+(defrule 
+	(can-research feudal-age)
+=>
+	(research feudal-age)
+)
+
+; Spam villagers up to 100
+(defrule
+	(can-train villager)
+	(unit-type-count villager <= 100)
+=>
+	(train villager)
+)
+
+; Loom
+(defrule
+	(can-research ri-loom)
+=>
+	(research ri-loom)
+)
+
+; Build houses
+(defrule 
+	(can-build house)
+	(housing-headroom < 5)
+=>
+	(build house)
+)
+
+
+;endregion
+
+
+
+
+;region Beginning
+
+; Explore
+(defrule 
+	(true)
+=> 
+	(set-strategic-number sn-number-explore-groups 1)
+	(set-strategic-number sn-cap-civilian-explorers 0)
+	(set-strategic-number sn-initial-exploration-required 0)
+	(disable-self)
+)
+
+; Build mill
+(defrule
+	(building-type-count-total house >= 2)
+	(building-type-count-total mill == 0)
+	(resource-found food)
+	(can-build mill)
+=>
+	(build mill)
+)
+
+; Build lumber-camp
+(defrule
+	(building-type-count-total mill > 0)
+	(building-type-count-total lumber-camp == 0)
+	(resource-found wood)
+	(can-build lumber-camp)
+=>
+	(build lumber-camp)
+)
+
+; Build farms
+(defrule
+	(building-type-count-total lumber-camp > 0)
+	(can-build farm)
+	(idle-farm-count == 0)
+=>
+	(build farm)
+)
+
+;endregion
